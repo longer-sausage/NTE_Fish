@@ -6,7 +6,7 @@ from modules.controller import Controller
 from modules.keyboard import Keyboard
 
 class FishBar:
-    RECT = (392, 82, 518, 12)   # (x, y, w, h)
+    RECT = (413, 77, 475, 7)   # (x, y, w, h)
     GREEN_BAR = (173, 202, 42)  # BGR range
     YELLOW_CURSOR = (157, 246, 254) # BGR
 
