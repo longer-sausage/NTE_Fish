@@ -13,7 +13,9 @@ class Template:
         coords = cv2.findNonZero(alpha)
         x, y, w, h = cv2.boundingRect(coords)
         self.rect = (x, y, w, h)
-        self.image = img[y:y+h, x:x+w, :3]
+        cropped_img = img[y:y+h, x:x+w, :3]
+        gray_img = cv2.cvtColor(cropped_img, cv2.COLOR_BGR2GRAY)
+        _, self.image = cv2.threshold(gray_img, 200, 255, cv2.THRESH_BINARY)
         logger.debug(f"Loaded template '{self.name}' with rect {self.rect}.")
 
     def __str__(self):
@@ -32,8 +34,10 @@ class Template:
         y2 = min(h_img, y + h + offset)
         
         roi = screenshot[y1:y2, x1:x2]
+        roi_gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
+        _, roi_bin = cv2.threshold(roi_gray, 200, 255, cv2.THRESH_BINARY)
             
-        res = cv2.matchTemplate(roi, self.image, cv2.TM_CCOEFF_NORMED)
+        res = cv2.matchTemplate(roi_bin, self.image, cv2.TM_CCOEFF_NORMED)
         _, max_val, _, _ = cv2.minMaxLoc(res)
         
         return max_val >= similarity

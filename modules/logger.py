@@ -14,8 +14,8 @@ def setup_logger(name="NTE_AutoFish"):
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
 
-    current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    file_handler = logging.FileHandler(f"{log_dir}/{current_time}.log", encoding="utf-8")
+    log_date = datetime.now().strftime("%Y-%m-%d")
+    file_handler = logging.FileHandler(f"{log_dir}/{log_date}.log", encoding="utf-8")
     file_handler.setLevel(logging.INFO)
 
     console_handler = logging.StreamHandler()

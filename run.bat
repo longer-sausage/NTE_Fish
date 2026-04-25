@@ -11,5 +11,8 @@ if %errorlevel% neq 0 (
 
 cd /d "%~dp0"
 
+:start
 %PYTHON% main.py
+
 pause
+goto start
