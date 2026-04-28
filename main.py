@@ -46,5 +46,6 @@ while True:
         logger.info("Clicking blank...")
         controller.mouse_click()
     except TimeoutError as e:
+        controller.mouse_click()
         logger.warning(f"{e} Restarting main loop.")
         continue

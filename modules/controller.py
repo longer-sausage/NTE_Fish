@@ -74,12 +74,17 @@ class Controller:
         top = max(0, min(top, screen_h))
         bottom = max(0, min(bottom, screen_h))
 
-        return frame[top:bottom, left:right]
+        cropped = frame[top:bottom, left:right]
+        if cropped.shape[1] < 1290 or cropped.shape[1] > 1310:
+            raise ValueError("窗口尺寸不支持。请确保游戏分辨率设置为 1280x720。")
+        return cropped
 
     def loop(self, interval=0.1):
         while True:
             try:
                 s = self.screenshot()
+            except ValueError:
+                raise
             except Exception as e:
                 logger.error(f"Error during screenshot: {e}")
             else:

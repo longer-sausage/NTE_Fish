@@ -7,7 +7,7 @@ from modules.keyboard import Keyboard
 from modules.logger import logger
 
 class FishBar:
-    RECT = (413, 77, 475, 7)   # (x, y, w, h)
+    RECT = (403, 60, 495, 40)   # (x, y, w, h)
     GREEN_BAR = (173, 202, 42)  # BGR range
     YELLOW_CURSOR = (157, 246, 254) # BGR
 
@@ -23,7 +23,7 @@ class FishBar:
         target = np.array(self.GREEN_BAR, dtype=np.int16)
         dist = np.sum(np.abs(roi.astype(np.int16) - target), axis=2)
         
-        threshold = 80
+        threshold = 10
         mask = dist < threshold
         cols = np.where(np.any(mask, axis=0))[0]
         if cols.size > 0:
@@ -39,7 +39,7 @@ class FishBar:
         target = np.array(self.YELLOW_CURSOR, dtype=np.int16)
         dist = np.sum(np.abs(roi.astype(np.int16) - target), axis=2)
         
-        threshold = 80 
+        threshold = 10 
         mask = dist < threshold
         cols = np.where(np.any(mask, axis=0))[0]
         if cols.size > 0:
