@@ -26,7 +26,7 @@ def wait_until_appear(template, timeout):
     for frame in controller.loop():
         if template.match(frame):
             logger.debug(f"Found {template}.")
-            controller.sleep(0.1)
+            controller.sleep(0.2)
             return
         if time.time() - start_time > timeout:
             logger.warning(f"Wait for {template} timeout after {timeout}s.")
@@ -55,8 +55,9 @@ def handle_event():
         controller.sleep(0.5)
         controller.mouse_click(SELL_CONFIRM.pos)
         wait_until_appear(SELL_SUCCESS, 10)
-        controller.mouse_click()
         controller.sleep(0.5)
+        controller.mouse_click()
+        controller.sleep(1)
         keyboard.click('esc')
         return True
 
