@@ -101,8 +101,10 @@ class Controller:
             win32gui.SetForegroundWindow(self.hwnd)
             time.sleep(0.5)
 
-        x, y = win32gui.ClientToScreen(self.hwnd, pos)
-        logger.debug(f"Mouse click at client pos {pos} (screen pos {x}, {y}).")
+        rect = win32gui.GetWindowRect(self.hwnd)
+        x = int(rect[0] + pos[0])
+        y = int(rect[1] + pos[1])
+        logger.debug(f"Mouse click at window pos {pos} (screen pos {x}, {y}).")
         win32api.SetCursorPos((x, y))
         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0)
         time.sleep(0.05)

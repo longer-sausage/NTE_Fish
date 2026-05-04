@@ -5,11 +5,14 @@ import time
 from modules.controller import Controller
 from modules.keyboard import Keyboard
 from modules.logger import logger
+import config
 
 class FishBar:
     RECT = (403, 60, 495, 40)   # (x, y, w, h)
     GREEN_BAR = (173, 202, 42)  # BGR range
     YELLOW_CURSOR = (157, 246, 254) # BGR
+    GREEN_BAR_LEFT = 0.5 - config.GREEN_BAR_SAFE_PROPORTION / 2
+    GREEN_BAR_RIGHT = 0.5 + config.GREEN_BAR_SAFE_PROPORTION / 2
 
     def __init__(self, controller: Controller):
         self.controller = controller
@@ -29,7 +32,7 @@ class FishBar:
         if cols.size > 0:
             left, right = cols[0] + x, cols[-1] + x
             width = right - left
-            return (int(left + width * 0.4), int(left + width * 0.6))
+            return (int(left + width * self.GREEN_BAR_LEFT), int(left + width * self.GREEN_BAR_RIGHT))
         return None
 
     def _get_yellow_cursor(self, screenshot):
@@ -70,7 +73,6 @@ class FishBar:
                 break
 
     def start(self):
-        logger.info("Starting fishing...")
         self.wait_until_ui_appear()
         
         missing_green_bar_count = 0
@@ -80,7 +82,6 @@ class FishBar:
             if green_bar is None:
                 missing_green_bar_count += 1
                 if missing_green_bar_count > 10: # 连续 10 帧检测不到绿条才认为结束
-                    logger.info("Fishing ended.")
                     break
                 continue
             
