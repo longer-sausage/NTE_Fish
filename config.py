@@ -17,3 +17,8 @@ BUY_BAIT_STACK_COUNT = 5
 钓鱼时绿条中间多少比例的范围内不移动黄色光标（范围0~1）
 '''
 GREEN_BAR_SAFE_PROPORTION = 0.4
+
+'''
+是否保存钓鱼条调试图片
+'''
+SAVE_FISH_BAR_DEBUG_IMAGE = False

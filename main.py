@@ -57,8 +57,12 @@ def handle_event():
         wait_until_appear(SELL_SUCCESS, 10)
         controller.sleep(0.5)
         controller.mouse_click()
-        controller.sleep(1)
-        keyboard.click('esc')
+        while True:
+            try:
+                wait_until_appear(HOOK, 3)
+                break
+            except TimeoutError:
+                keyboard.click('esc')
         return True
 
     if MONTH_CARD.match(image):
@@ -82,7 +86,7 @@ def handle_event():
         BUY.match(img)
         for _ in range(config.BUY_BAIT_STACK_COUNT):
             controller.mouse_click(MAX.pos)
-            controller.sleep(0.1)
+            controller.sleep(0.2)
             controller.mouse_click(BUY.pos)
             wait_until_appear(CONFIRM, 5)
             controller.mouse_click(CONFIRM.pos)
@@ -111,7 +115,7 @@ def main():
             
             wait_until_appear(CLICK_BLANK, 10)
             controller.mouse_click()
-        except TimeoutError as e:
+        except TimeoutError:
             handle_event()
             continue
 
