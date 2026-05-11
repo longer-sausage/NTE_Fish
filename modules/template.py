@@ -23,7 +23,7 @@ class Template:
     def __str__(self):
         return self.name
     
-    def match(self, screenshot, offset=10, similarity=0.85):
+    def match(self, screenshot, offset=10, similarity=0.7):
         if screenshot is None or self.image is None:
             return False
             
@@ -49,21 +49,19 @@ class Template:
 
 
 
-TAKE_BAIT = Template("./assets/templates/TAKE_BAIT.png")
 HOOK = Template("./assets/templates/HOOK.png")
-CLICK_BLANK = Template("./assets/templates/CLICK_BLANK.png")
 FULL = Template("./assets/templates/FULL.png")
 FISH_STORAGE = Template("./assets/templates/FISH_STORAGE.png")
 SELL = Template("./assets/templates/SELL.png")
 SELL_CONFIRM = Template("./assets/templates/SELL_CONFIRM.png")
-MONTH_CARD = Template("./assets/templates/MONTH_CARD.png")
 GET_ITEM = Template("./assets/templates/GET_ITEM.png")
 NEED_BAIT = Template("./assets/templates/NEED_BAIT.png")
 BAIT = Template("./assets/templates/BAIT.png")
-BAIT.rect = (39, 118, 409, 476)
+BAIT.rect = (20, 100, 450, 520)
 MAX = Template("./assets/templates/MAX.png")
 BUY = Template("./assets/templates/BUY.png")
 CONFIRM = Template("./assets/templates/CONFIRM.png")
 CHANGE = Template("./assets/templates/CHANGE.png")
 SELL_SUCCESS = Template("./assets/templates/SELL_SUCCESS.png")
 FISH_ICON = Template("./assets/templates/FISH_ICON.png")
+START = Template("./assets/templates/START.png")

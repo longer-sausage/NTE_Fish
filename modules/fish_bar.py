@@ -20,6 +20,11 @@ class FishBar:
         self.keyboard = Keyboard()
         self.current_key = None
 
+        self.green_lower = np.clip(np.array(self.GREEN_BAR) - 10, 0, 255).astype(np.uint8)
+        self.green_upper = np.clip(np.array(self.GREEN_BAR) + 10, 0, 255).astype(np.uint8)
+        self.yellow_lower = np.clip(np.array(self.YELLOW_CURSOR) - 10, 0, 255).astype(np.uint8)
+        self.yellow_upper = np.clip(np.array(self.YELLOW_CURSOR) + 10, 0, 255).astype(np.uint8)
+
     def set_rect(self, base_pos):
         x, y = base_pos
         x += 40
@@ -33,10 +38,11 @@ class FishBar:
         x, y, w, h = self.rect
         debug_img = screenshot.copy()
         
+        roi = screenshot[y:y+h, x:x+w]
         cv2.rectangle(debug_img, (x, y), (x + w, y + h), (255, 0, 0), 2)
         
-        green_bar = self._get_green_bar(screenshot)
-        cursor = self._get_yellow_cursor(screenshot)
+        green_bar = self._get_green_bar(roi, x)
+        cursor = self._get_yellow_cursor(roi, x)
         
         if green_bar:
             left, right = green_bar
@@ -56,34 +62,20 @@ class FishBar:
         cv2.imwrite(filename, debug_img)
         logger.debug(f"Saved debug image: {filename}")
     
-    def _get_green_bar(self, screenshot):
-        x, y, w, h = self.rect
-        roi = screenshot[y:y+h, x:x+w]
-        
-        target = np.array(self.GREEN_BAR, dtype=np.int16)
-        dist = np.sum(np.abs(roi.astype(np.int16) - target), axis=2)
-        
-        threshold = 10
-        mask = dist < threshold
+    def _get_green_bar(self, roi, x_offset):
+        mask = cv2.inRange(roi, self.green_lower, self.green_upper)
         cols = np.where(np.any(mask, axis=0))[0]
         if cols.size > 0:
-            left, right = cols[0] + x, cols[-1] + x
+            left, right = cols[0] + x_offset, cols[-1] + x_offset
             width = right - left
             return (int(left + width * self.GREEN_BAR_LEFT), int(left + width * self.GREEN_BAR_RIGHT))
         return None
 
-    def _get_yellow_cursor(self, screenshot):
-        x, y, w, h = self.rect
-        roi = screenshot[y:y+h, x:x+w]
-        
-        target = np.array(self.YELLOW_CURSOR, dtype=np.int16)
-        dist = np.sum(np.abs(roi.astype(np.int16) - target), axis=2)
-        
-        threshold = 10 
-        mask = dist < threshold
+    def _get_yellow_cursor(self, roi, x_offset):
+        mask = cv2.inRange(roi, self.yellow_lower, self.yellow_upper)
         cols = np.where(np.any(mask, axis=0))[0]
         if cols.size > 0:
-            return int((cols[0] + cols[-1]) // 2 + x)
+            return int((cols[0] + cols[-1]) // 2 + x_offset)
         return None
 
     def _press(self, key):
@@ -103,14 +95,11 @@ class FishBar:
             self.current_key = None
 
     def start(self):
-        for frame in self.controller.loop():
-            if FISH_ICON.match(frame):
-                self.set_rect(FISH_ICON.pos)
-                break
-        
         missing_green_bar_count = 0
+        x, y, w, h = self.rect
         for frame in self.controller.loop(interval=0):
-            green_bar = self._get_green_bar(frame)
+            roi = frame[y:y+h, x:x+w]
+            green_bar = self._get_green_bar(roi, x)
             
             if green_bar is None:
                 missing_green_bar_count += 1
@@ -120,7 +109,7 @@ class FishBar:
             
             missing_green_bar_count = 0
             left, right = green_bar
-            cursor = self._get_yellow_cursor(frame)
+            cursor = self._get_yellow_cursor(roi, x)
 
             if cursor is None:
                 continue

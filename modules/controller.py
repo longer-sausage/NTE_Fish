@@ -90,7 +90,7 @@ class Controller:
             else:
                 if s is not None:
                     yield s
-            time.sleep(interval)
+            self.sleep(interval)
 
     def mouse_click(self, pos=(650, 700)):
         if not win32gui.IsWindow(self.hwnd):
