@@ -119,15 +119,28 @@ def main():
     wait_until_appear(HOOK, 300)
     logger.info("Hook found, starting main loop...")
     last_time = time.time()
+
+
+    begin_fish_time = None
+
     for frame in controller.loop():
         keyboard.click('f')
         controller.mouse_click()
 
         if FISH_ICON.match(frame):
+
+            if not begin_fish_time:
+                begin_fish_time = time.time()
+
             fish_bar.set_rect(FISH_ICON.pos)
             fish_bar.start()
             last_time = time.time()
-        
+
+            if config.TIMER_FINISHED_MINUTES and time.time() - begin_fish_time >= config.TIMER_FINISHED_MINUTES * 60:
+                logger.info("Arrival end time.")
+                config.POWER_OFF and os.system("shutdown /s /t 1")
+                break
+
         if time.time() - last_time >= 20:
             logger.warning("No fish icon found for 20 seconds.")
             handle_event() or handle_stuck()
