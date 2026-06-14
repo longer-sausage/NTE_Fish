@@ -1,4 +1,9 @@
 '''
+是否是国际服
+'''
+IS_INTERNATIONAL_VERSION = False
+
+'''
 鱼仓满时是否自动卖鱼，关闭此选项后，鱼仓满时会停止脚本
 '''
 SELL_FISH = True

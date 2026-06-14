@@ -4,13 +4,14 @@ import win32gui
 import win32con
 import time
 import random
+import config
 from modules.logger import logger
 
 class Controller:
-    def __init__(self, window_name='异环  '):
+    def __init__(self):
         self.camera = bettercam.create(output_color="BGR")
         self.camera.start(target_fps=120, video_mode=True)
-        self.window_name = window_name
+        self.window_name = f'{"NTE" if config.IS_INTERNATIONAL_VERSION else "异环"}  '
         self.last_check_time = 0
         self.rect = None
         self._ensure_hwnd()
